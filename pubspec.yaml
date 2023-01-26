@@ -1,7 +1,8 @@
 name: mock_firebase_functions
-description: A new Flutter package project.
-version: 0.0.1
-homepage:
+description: Flutter plugin for mocking FirebaseFunctions calls.
+repository: https://github.com/LucaDillenburg/Mock-Firebase-Functions
+issue_tracker: https://github.com/LucaDillenburg/Mock-Firebase-Functions/issues
+version: 1.0.0
 
 flutter:
   plugin:
