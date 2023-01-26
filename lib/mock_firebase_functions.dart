@@ -3,20 +3,20 @@ library mock_firebase_functions;
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:mocktail/mocktail.dart';
 
-typedef MockedFunction = Future<MockHttpsCallableResult> Function(dynamic parameters);
+typedef MockedFunction = Future<dynamic> Function(dynamic parameters);
 
 class MockFirebaseFunctions extends Mock implements FirebaseFunctions {
-  final Map<String, MockedFunction> mockedFunctions;
+  final Map<String, MockedFunction> _mockedFunctions;
   MockFirebaseFunctions([Map<String, MockedFunction>? mockedFunctions])
-      : mockedFunctions = mockedFunctions ?? Map.from({});
+      : _mockedFunctions = mockedFunctions ?? Map.from({});
 
   void mock(String suffix, MockedFunction function) {
-    mockedFunctions[suffix] = function;
+    _mockedFunctions[suffix] = function;
   }
 
   @override
   HttpsCallable httpsCallable(String suffix, {HttpsCallableOptions? options}) {
-    final function = mockedFunctions[suffix];
+    final function = _mockedFunctions[suffix];
 
     if (function == null) {
       return MockHttpsCallable((_) => throw UnimplementedError());
@@ -34,12 +34,14 @@ class MockHttpsCallable extends Mock implements HttpsCallable {
   MockHttpsCallable(this.function);
 
   @override
-  Future<HttpsCallableResult<T>> call<T>([dynamic parameters]) async =>
-      (await function(parameters)) as HttpsCallableResult<T>;
+  Future<HttpsCallableResult<T>> call<T>([dynamic parameters]) async {
+    final response = await function(parameters);
+    return MockHttpsCallableResult<T>(response);
+  }
 }
 
-class MockHttpsCallableResult implements HttpsCallableResult<dynamic> {
+class MockHttpsCallableResult<T> implements HttpsCallableResult<T> {
   @override
-  final dynamic data;
+  final T data;
   MockHttpsCallableResult(this.data);
 }

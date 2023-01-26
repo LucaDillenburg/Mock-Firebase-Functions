@@ -19,7 +19,7 @@ void main() {
     final functions = MockFirebaseFunctions();
     functions.mock(
       'function1',
-      (body) async => MockHttpsCallableResult('Hello World'),
+      (body) async => 'Hello World',
     );
     expect(
       (await functions.httpsCallable('function1').call()).data,
@@ -28,10 +28,19 @@ void main() {
   });
 
   test('MockFirebaseFunctions.httpsCallable.call with definition by constructor should resolve', () async {
-    final functions = MockFirebaseFunctions({'function1': (body) async => MockHttpsCallableResult('Hello World')});
+    final functions = MockFirebaseFunctions({'function1': (body) async => 'Hello World'});
 
     expect(
       (await functions.httpsCallable('function1').call()).data,
+      'Hello World',
+    );
+  });
+
+  test('HttpsCallable.call with template parameter', () async {
+    final functions = MockFirebaseFunctions({'function1': (body) async => 'Hello World'});
+
+    expect(
+      (await functions.httpsCallable('function1').call<String>()).data,
       'Hello World',
     );
   });
