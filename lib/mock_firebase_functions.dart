@@ -26,7 +26,7 @@ class MockFirebaseFunctions extends Mock implements FirebaseFunctions {
   }
 
   @override
-  void useFunctionsEmulator(String host, int port) {}
+  void useFunctionsEmulator(String host, int port, {bool? automaticHostMapping}) {}
 }
 
 class MockHttpsCallable extends Mock implements HttpsCallable {
